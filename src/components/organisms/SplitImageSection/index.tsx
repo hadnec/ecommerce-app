@@ -1,14 +1,15 @@
-
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Grid, GridItem } from '@chakra-ui/react';
 
-const SplitImageSection: React.FC = () => {
-  return (
-    <Box display="flex" h="100vh">
-      <Box flex={1} bgImage="url('/path/to/image1.jpg')" bgSize="cover" />
-      <Box flex={1} bgImage="url('/path/to/image2.jpg')" bgSize="cover" />
-    </Box>
-  );
-};
+interface SplitImageSectionProps {
+  images: string[];
+}
+
+const SplitImageSection: React.FC<SplitImageSectionProps> = ({ images }) => (
+  <Grid templateColumns="repeat(2, 1fr)" height="100vh">
+    <GridItem bgImage={`url(${images[0]})`} bgSize="cover" bgPos="center" />
+    <GridItem bgImage={`url(${images[1]})`} bgSize="cover" bgPos="center" />
+  </Grid>
+);
 
 export default SplitImageSection;

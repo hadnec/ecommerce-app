@@ -1,4 +1,3 @@
-// src/pages/Home/index.tsx
 import React from 'react';
 import FreeShippingBar from '../../components/atoms/FreeShippingBar';
 import Header from '../../components/organisms/Header';
@@ -18,11 +17,15 @@ const Home: React.FC = () => {
     <>
       <FreeShippingBar />
       <Header />
-      <FullScreenBanner />
-      <ProductSlider products={products ?? []} />
-      <SplitImageSection />
-      <ProductSlider products={products ?? []} />
-      <FeaturedProducts products={products ?? []} />
+      {products && (
+        <>
+          <FullScreenBanner imageUrl={products[0]?.image || ''} text="Big Sale!" />
+          <ProductSlider products={products.slice(1, 6)} />
+          <SplitImageSection images={[products[6]?.image || '', products[7]?.image || '']} />
+          <ProductSlider products={products.slice(8, 12)} />
+          <FeaturedProducts products={products.slice(12, 14)} />
+        </>
+      )}
     </>
   );
 };

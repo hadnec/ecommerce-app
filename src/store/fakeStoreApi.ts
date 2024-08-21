@@ -1,3 +1,4 @@
+// src/store/fakeStoreApi.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Product } from '../types/product';
 

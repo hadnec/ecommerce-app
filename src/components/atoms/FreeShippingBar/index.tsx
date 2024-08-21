@@ -1,10 +1,19 @@
-
 import React from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 
 const FreeShippingBar: React.FC = () => (
-  <Box bg="white" w="100%" p={2} textAlign="center" position="fixed" top={0} zIndex={9999}>
-    <Text fontSize="sm">Free shipping on orders over $50</Text>
+  <Box
+    bg="white"
+    color="black"
+    textAlign="center"
+    fontSize="sm"
+    p={2}
+    position="fixed"
+    top={0}
+    width="100%"
+    zIndex={1000}
+  >
+    Free Shipping on all orders!
   </Box>
 );
 

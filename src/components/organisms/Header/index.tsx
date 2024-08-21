@@ -1,35 +1,36 @@
-
 import React from 'react';
-import { Box, Flex, Spacer, Text } from '@chakra-ui/react';
+import { Box, HStack, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 
-const Header: React.FC = () => {
-  return (
-    <Box position="fixed" top="30px" w="100%" zIndex={9998}>
-      <Flex
-        justifyContent="space-between"
-        alignItems="center"
-        px={4}
-        py={2}
-        bg="transparent"
-        color="white"
-        transition="color 0.3s"
-        _hover={{ color: "black" }}
-      >
-        {/* Left - Categories */}
-        <Text>Categories</Text>
-        {/* Center - Logo/Title */}
-        <Text fontWeight="bold" fontSize="xl">
-          ShopName
-        </Text>
-        {/* Right - Cart, Language, Region */}
-        <Flex>
-          <Text mx={2}>Cart</Text>
-          <Text mx={2}>Language</Text>
-          <Text mx={2}>Region</Text>
-        </Flex>
-      </Flex>
-    </Box>
-  );
-};
+const Header: React.FC = () => (
+  <Box
+    as="header"
+    position="fixed"
+    top="30px" // Под FreeShippingBar
+    width="100%"
+    zIndex={900}
+    bg="transparent"
+    _hover={{ bg: "white" }}
+    transition="background-color 0.3s ease"
+  >
+    <HStack justify="space-between" px={8} py={4}>
+      <HStack spacing={4}>
+        <Menu>
+          <MenuButton>Categories</MenuButton>
+          <MenuList>
+            {/* Placeholder items */}
+            <MenuItem>Category 1</MenuItem>
+            <MenuItem>Category 2</MenuItem>
+            <MenuItem>Category 3</MenuItem>
+          </MenuList>
+        </Menu>
+      </HStack>
+      <Box fontWeight="bold" fontSize="lg">My Store</Box>
+      <HStack spacing={4}>
+        <Box>Cart</Box>
+        <Box>Language/Region</Box>
+      </HStack>
+    </HStack>
+  </Box>
+);
 
 export default Header;
