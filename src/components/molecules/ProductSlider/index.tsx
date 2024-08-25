@@ -1,57 +1,32 @@
+// src/components/molecules/ProductSlider/index.tsx
 import React from 'react';
 import Slider from 'react-slick';
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import ProductCard from '../ProductCard';
 import { Product } from '../../../types/product';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 interface ProductSliderProps {
   products: Product[];
 }
 
 const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
-  console.log("Products received by ProductSlider:", products);
-
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
+    adaptiveHeight: true, 
   };
 
   return (
-    <Box width="100%" overflow="hidden" position="relative" zIndex="9999" border="2px solid red" minHeight="60vh">
+    <Box maxWidth="1200px" margin="0 auto" padding="20px"> 
       <Slider {...settings}>
         {products.map((product) => (
-          <Box
-            key={product.id}
-            bgImage={`url(${product.image})`}
-            bgSize="cover"
-            bgPosition="center"
-            height="60vh"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            position="relative"
-            border="2px solid blue"
-            visibility="visible"
-          >
-            <Text color="white" fontSize="2xl" fontWeight="bold" bg="rgba(0, 0, 0, 0.5)" p="4" border="1px solid green">
-              {product.title}
-            </Text>
+          <Box key={product.id} padding="10px">
+            <ProductCard product={product} />
           </Box>
         ))}
       </Slider>
