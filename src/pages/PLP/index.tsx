@@ -6,7 +6,7 @@ import axios from 'axios';
 const PLP: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(8); // Количество элементов на странице
+  const [itemsPerPage] = useState<number>(8); 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   useEffect(() => {
@@ -18,12 +18,12 @@ const PLP: React.FC = () => {
     fetchProducts();
   }, []);
 
-  // Фильтрация по категории
+  
   const filteredProducts = selectedCategory === 'all'
     ? products
     : products.filter(product => product.category === selectedCategory);
 
-  // Пагинация
+  
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
