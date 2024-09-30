@@ -18,7 +18,7 @@ interface Product {
   rating: Rating;
 }
 
-// Define the initial state
+// Define the initial state1
 interface ProductsState {
   items: Product[];
   selectedProduct: Product | null;
