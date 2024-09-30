@@ -1,17 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from '../pages/Home';
-import PLP from '../pages/PLP';
-import PDP from '../pages/PDP';
 
-const AppRoutes: React.FC = () => (
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from '../pages/Home';
+import ProductListPage from '../pages/PLP';
+import ProductDetailPage from '../pages/PDP';
+
+
+const RoutesComponent = () => (
   <Router>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/category/:category" element={<PLP />} />
-      <Route path="/product/:id" element={<PDP />} />
-    </Routes>
-  </Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products" element={<ProductListPage />} />
+        <Route path="/category/:category" element={<ProductListPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+      </Routes>
+    </Router>
 );
 
-export default AppRoutes;
+export default RoutesComponent;

@@ -1,33 +1,79 @@
-import React from 'react';
-import FreeShippingBar from '../../components/atoms/FreeShippingBar';
+// src/pages/Home/index.tsx
+
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { Box, Heading } from '@chakra-ui/react';
+import { Helmet } from 'react-helmet';
 import Header from '../../components/organisms/Header';
-import FullScreenBanner from '../../components/organisms/FullScreenBanner';
-import ProductSlider from '../../components/molecules/ProductSlider';
-import SplitImageSection from '../../components/organisms/SplitImageSection';
-import FeaturedProducts from '../../components/organisms/FeaturedProducts';
-import { useGetProductsQuery } from '../../store/fakeStoreApi';
+import Slider from '../../components/organisms/Slider';
+import ProductCard from '../../components/molecules/ProductCard';
+import { fetchProducts } from '../../store/slices/productsSlice';
 
-const Home: React.FC = () => {
-  const { data: products, isLoading, error } = useGetProductsQuery();
+const HomePage = () => {
+  const dispatch = useAppDispatch();
+  const products = useAppSelector((state) => state.products.items);
+  const status = useAppSelector((state) => state.products.status);
+  const error = useAppSelector((state) => state.products.error);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading products</div>;
+  useEffect(() => {
+    if (status !== 'succeeded' || products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, status, products.length]);
+
+  if (status === 'loading') {
+    return <div>Loading products...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
+  if (products.length === 0) {
+    return <div>No products available.</div>;
+  }
 
   return (
-    <>
-      <FreeShippingBar />
+    <Box>
+      <Helmet>
+        <title>Home | StoreName</title>
+        <meta name="description" content="Welcome to our online store!" />
+      </Helmet>
       <Header />
-      {products && (
-        <>
-          <FullScreenBanner imageUrl={products[0]?.image || ''} text="Big Sale!" />
-          <ProductSlider products={products.slice(1, 6)} />
-          <SplitImageSection images={[products[6]?.image || '', products[7]?.image || '']} />
-          <ProductSlider products={products.slice(8, 12)} />
-          <FeaturedProducts products={products.slice(12, 14)} />
-        </>
+      {/* Full-screen image with text */}
+      <Box
+        bgImage="url('https://via.placeholder.com/1920x600')"
+        bgSize="cover"
+        bgPos="center"
+        h="600px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Box bg="rgba(255,255,255,0.8)" p="6" borderRadius="md">
+          <Heading size="2xl">Big Sale!</Heading>
+        </Box>
+      </Box>
+      {/* Slider with products */}
+      <Slider products={products} />
+      {/* Two images splitting the screen vertically */}
+      <Box display="flex" h="400px">
+        <Box flex="1" bgImage="url('https://via.placeholder.com/960x400')" bgSize="cover" />
+        <Box flex="1" bgImage="url('https://via.placeholder.com/960x400')" bgSize="cover" />
+      </Box>
+      {/* Another slider */}
+      <Slider products={products} />
+      {/* Two product cards without descriptions */}
+      {products.length >= 2 ? (
+        <Box display="flex" justifyContent="space-around" mt="8">
+          <ProductCard product={products[0]} />
+          <ProductCard product={products[1]} />
+        </Box>
+      ) : (
+        <div>Not enough products to display.</div>
       )}
-    </>
+    </Box>
   );
 };
 
-export default Home;
+export default HomePage;

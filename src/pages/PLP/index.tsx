@@ -1,85 +1,107 @@
 // src/pages/PLP/index.tsx
-import React, { useEffect, useState } from 'react';
-import { Box, SimpleGrid, Text, Button, Image, Select } from '@chakra-ui/react';
-import axios from 'axios';
 
-const PLP: React.FC = () => {
-  const [products, setProducts] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(8); 
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { Box, SimpleGrid, Button, Flex } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+import Header from '../../components/organisms/Header';
+import ProductCard from '../../components/molecules/ProductCard';
+import { fetchProducts, fetchProductsByCategory } from '../../store/slices/productsSlice';
+
+const ITEMS_PER_PAGE = 8; // Number of products per page
+
+const ProductListPage = () => {
+  const dispatch = useAppDispatch();
+  const products = useAppSelector((state) => state.products.items);
+  const status = useAppSelector((state) => state.products.status);
+  const error = useAppSelector((state) => state.products.error);
+  const { category } = useParams<{ category: string }>();
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await axios.get('https://fakestoreapi.com/products');
-      setProducts(response.data);
-    };
+    setCurrentPage(1); // Reset to first page when category changes
+    if (category) {
+      const decodedCategory = decodeURIComponent(category);
+      dispatch(fetchProductsByCategory(decodedCategory));
+    } else {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, category]);
 
-    fetchProducts();
-  }, []);
+  // Pagination logic
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
-  
-  const filteredProducts = selectedCategory === 'all'
-    ? products
-    : products.filter(product => product.category === selectedCategory);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  
-  const indexOfLastProduct = currentPage * itemsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  if (status === 'loading') {
+    return (
+      <div>
+        <Header />
+        <Box p="8">Loading products...</Box>
+      </div>
+    );
+  }
 
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  if (status === 'failed') {
+    return (
+      <div>
+        <Header />
+        <Box p="8">Error: {error}</Box>
+      </div>
+    );
+  }
 
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
+  if (products.length === 0) {
+    return (
+      <div>
+        <Header />
+        <Box p="8">No products found.</Box>
+      </div>
+    );
+  }
 
   return (
-    <Box p={4}>
-      <Select
-        mb={4}
-        onChange={(e) => setSelectedCategory(e.target.value)}
-        placeholder="Select Category"
-      >
-        <option value="all">All Categories</option>
-        <option value="men's clothing">Men's Clothing</option>
-        <option value="women's clothing">Women's Clothing</option>
-        <option value="jewelery">Jewelery</option>
-        <option value="electronics">Electronics</option>
-      </Select>
-
-      <SimpleGrid columns={[1, 2, 3, 4]} spacing={4}>
-        {currentProducts.map((product) => (
-          <Box
-            key={product.id}
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            p={4}
-          >
-            <Image src={product.image} alt={product.title} boxSize="200px" objectFit="cover" />
-            <Text mt={2} fontWeight="bold">
-              {product.title}
-            </Text>
-            <Text>${product.price}</Text>
-          </Box>
-        ))}
-      </SimpleGrid>
-
-      <Box mt={4} display="flex" justifyContent="center">
-        {Array.from({ length: totalPages }, (_, index) => (
+    <Box>
+      <Header />
+      <Box p="8">
+        <SimpleGrid columns={[1, 2, 3, 4]} spacing="8">
+          {currentProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </SimpleGrid>
+        {/* Pagination */}
+        <Flex justifyContent="center" mt="8" alignItems="center">
           <Button
-            key={index + 1}
-            onClick={() => handlePageChange(index + 1)}
-            mx={1}
-            colorScheme={currentPage === index + 1 ? 'blue' : 'gray'}
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            mx="1"
           >
-            {index + 1}
+            Previous
           </Button>
-        ))}
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Button
+              key={index + 1}
+              onClick={() => paginate(index + 1)}
+              mx="1"
+              variant={currentPage === index + 1 ? 'solid' : 'outline'}
+            >
+              {index + 1}
+            </Button>
+          ))}
+          <Button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            mx="1"
+          >
+            Next
+          </Button>
+        </Flex>
       </Box>
     </Box>
   );
 };
 
-export default PLP;
+export default ProductListPage;

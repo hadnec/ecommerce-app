@@ -1,15 +1,13 @@
-// src/store/index.ts
 import { configureStore } from '@reduxjs/toolkit';
-import { fakeStoreApi } from './fakeStoreApi';
+import productsReducer from './slices/productsSlice';
 
-
-export const store = configureStore({
+const store = configureStore({
   reducer: {
-    [fakeStoreApi.reducerPath]: fakeStoreApi.reducer,
+    products: productsReducer,
+    // other reducers if any
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(fakeStoreApi.middleware),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export default store;
 export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;

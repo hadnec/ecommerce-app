@@ -1,32 +1,67 @@
-// src/pages/ProductDetail/index.tsx
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Text, Image } from '@chakra-ui/react';
-import axios from 'axios';
+// src/pages/PDP/index.tsx
 
-const ProductDetail: React.FC = () => {
+import React, { useEffect } from 'react';
+import { Box, Heading, Text, Button } from '@chakra-ui/react';
+import Header from '../../components/organisms/Header';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchProductById, clearSelectedProduct } from '../../store/slices/productsSlice';
+import ImageZoom from '../../components/molecules/ImageZoom';
+
+const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<any>(null);
+  const dispatch = useAppDispatch();
+  const product = useAppSelector((state) => state.products.selectedProduct);
+  const status = useAppSelector((state) => state.products.status);
+  const error = useAppSelector((state) => state.products.error);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const response = await axios.get(`https://fakestoreapi.com/products/${id}`);
-      setProduct(response.data);
-    };
-    fetchProduct();
-  }, [id]);
+    if (id) {
+      dispatch(fetchProductById(id));
+    }
 
-  if (!product) return <Text>Loading...</Text>;
+    return () => {
+      dispatch(clearSelectedProduct());
+    };
+  }, [dispatch, id]);
+
+  if (status === 'loading' || !product) {
+    return (
+      <div>
+        <Header />
+        <Box p="8">Loading product...</Box>
+      </div>
+    );
+  }
+
+  if (status === 'failed') {
+    return (
+      <div>
+        <Header />
+        <Box p="8">Error: {error}</Box>
+      </div>
+    );
+  }
 
   return (
-    <Box p={4}>
-      <Text fontSize="2xl" fontWeight="bold">{product.title}</Text>
-      <Image src={product.image} alt={product.title} />
-      <Text mt={2}>{product.description}</Text>
-      <Text fontWeight="bold">${product.price}</Text>
+    <Box>
+      <Header />
+      <Box display="flex" p="8">
+        <Box flex="1">
+          <ImageZoom src={product.image} alt={product.title} />
+        </Box>
+        <Box flex="1" ml="8">
+          <Heading>{product.title}</Heading>
+          <Text mt="4" fontSize="2xl" color="gray.600">
+            ${product.price}
+          </Text>
+          <Text mt="4">{product.description}</Text>
+          <Button mt="4">Add to Wishlist</Button>
+          {/* Additional collapsible sections */}
+        </Box>
+      </Box>
     </Box>
   );
 };
 
-export default ProductDetail;
-  
+export default ProductDetailPage;
