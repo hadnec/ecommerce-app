@@ -1,33 +1,46 @@
-import { useEffect, useState } from 'react';
-import { Box, SimpleGrid } from '@chakra-ui/react';
+// src/pages/Wishlist/index.tsx
+
+import React from 'react';
+import { Box, Heading, SimpleGrid, Button } from '@chakra-ui/react';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import Header from '../../components/organisms/Header';
 import ProductCard from '../../components/molecules/ProductCard';
+import { removeItem } from '../../store/slices/wishlistSlice';
 
 const WishlistPage = () => {
-  const [wishlistProducts, setWishlistProducts] = useState<any[]>([]);
+  const dispatch = useAppDispatch();
+  const wishlistItems = useAppSelector((state) => state.wishlist.items);
 
-  useEffect(() => {
-    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-    const fetchWishlistProducts = async () => {
-      const products = await Promise.all(
-        wishlist.map(async (id: number) => {
-          const response = await fetch(`https://fakestoreapi.com/products/${id}`);
-          return response.json();
-        })
-      );
-      setWishlistProducts(products);
-    };
-    fetchWishlistProducts();
-  }, []);
+  const handleRemoveFromWishlist = (id: number) => {
+    dispatch(removeItem(id));
+  };
 
   return (
     <Box>
       <Header />
-      <SimpleGrid columns={[2, null, 4]} spacing="8" p="8">
-        {wishlistProducts.map((product: any) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </SimpleGrid>
+      <Box p="8">
+        <Heading mb="8">My Wishlist</Heading>
+        {wishlistItems.length === 0 ? (
+          <Box>No items in your wishlist.</Box>
+        ) : (
+          <SimpleGrid columns={[1, 2, 3, 4]} spacing="8">
+            {wishlistItems.map((product) => (
+              <Box key={product.id} position="relative">
+                <ProductCard product={product} />
+                <Button
+                  position="absolute"
+                  top="2"
+                  right="2"
+                  size="sm"
+                  onClick={() => handleRemoveFromWishlist(product.id)}
+                >
+                  Remove
+                </Button>
+              </Box>
+            ))}
+          </SimpleGrid>
+        )}
+      </Box>
     </Box>
   );
 };

@@ -3,12 +3,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Define the product and rating types
-interface Rating {
+export interface Rating {
   rate: number;
   count: number;
 }
 
-interface Product {
+export interface Product {
   id: number;
   title: string;
   image: string;
@@ -18,7 +18,7 @@ interface Product {
   rating: Rating;
 }
 
-// Define the initial state1
+// Define the initial state
 interface ProductsState {
   items: Product[];
   selectedProduct: Product | null;
@@ -34,8 +34,6 @@ const initialState: ProductsState = {
   status: 'idle',
   error: null,
 };
-
-
 
 // Async thunk to fetch all products
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
@@ -160,8 +158,7 @@ const productsSlice = createSlice({
   },
 });
 
-
-
 export const { clearSelectedProduct } = productsSlice.actions;
 
 export default productsSlice.reducer;
+

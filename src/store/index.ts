@@ -1,10 +1,14 @@
+// src/store/index.ts
+
 import { configureStore } from '@reduxjs/toolkit';
 import productsReducer from './slices/productsSlice';
+import wishlistReducer from './slices/wishlistSlice';
 
 const store = configureStore({
   reducer: {
     products: productsReducer,
-    // other reducers if any
+    wishlist: wishlistReducer,
+    // Add other reducers here if needed
   },
 });
 

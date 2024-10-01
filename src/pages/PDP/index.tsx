@@ -6,6 +6,7 @@ import Header from '../../components/organisms/Header';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchProductById, clearSelectedProduct } from '../../store/slices/productsSlice';
+import { addItem } from '../../store/slices/wishlistSlice';
 import ImageZoom from '../../components/molecules/ImageZoom';
 
 const ProductDetailPage = () => {
@@ -14,6 +15,9 @@ const ProductDetailPage = () => {
   const product = useAppSelector((state) => state.products.selectedProduct);
   const status = useAppSelector((state) => state.products.status);
   const error = useAppSelector((state) => state.products.error);
+  const wishlistItems = useAppSelector((state) => state.wishlist.items);
+
+  const isInWishlist = product ? wishlistItems.some((item) => item.id === product.id) : false;
 
   useEffect(() => {
     if (id) {
@@ -24,6 +28,12 @@ const ProductDetailPage = () => {
       dispatch(clearSelectedProduct());
     };
   }, [dispatch, id]);
+
+  const handleAddToWishlist = () => {
+    if (product) {
+      dispatch(addItem(product));
+    }
+  };
 
   if (status === 'loading' || !product) {
     return (
@@ -56,7 +66,14 @@ const ProductDetailPage = () => {
             ${product.price}
           </Text>
           <Text mt="4">{product.description}</Text>
-          <Button mt="4">Add to Wishlist</Button>
+          <Button
+            mt="4"
+            onClick={handleAddToWishlist}
+            disabled={isInWishlist}
+            colorScheme={isInWishlist ? 'green' : 'teal'}
+          >
+            {isInWishlist ? 'Added to Wishlist' : 'Add to Wishlist'}
+          </Button>
           {/* Additional collapsible sections */}
         </Box>
       </Box>
