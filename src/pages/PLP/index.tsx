@@ -8,7 +8,7 @@ import Header from '../../components/organisms/Header';
 import ProductCard from '../../components/molecules/ProductCard';
 import { fetchProducts, fetchProductsByCategory } from '../../store/slices/productsSlice';
 
-const ITEMS_PER_PAGE = 8; // Number of products per page
+const ITEMS_PER_PAGE = 8;
 
 const ProductListPage = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +19,7 @@ const ProductListPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    setCurrentPage(1); // Reset to first page when category changes
+    setCurrentPage(1);
     if (category) {
       const decodedCategory = decodeURIComponent(category);
       dispatch(fetchProductsByCategory(decodedCategory));

@@ -1,5 +1,7 @@
+// src/components/molecules/SearchBar.tsx
+
 import { useState, useEffect, useRef } from 'react';
-import { Input, InputGroup, InputRightElement, Box, List, ListItem } from '@chakra-ui/react';
+import { Input, InputGroup, InputRightElement, Box, List, ListItem, Text } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import useSearch from '../../../hooks/useSearch';
 import { useNavigate } from 'react-router-dom';
@@ -96,7 +98,7 @@ const SearchBar = () => {
           value={searchTerm}
           onChange={(e) => handleSearchChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
-          // No need for onBlur here since we're handling clicks outside
+          color="white" // Set the input text color to white
         />
         <InputRightElement pointerEvents="none">
           <SearchIcon color="gray.300" />
@@ -120,9 +122,9 @@ const SearchBar = () => {
                 p="2"
                 cursor="pointer"
                 _hover={{ bg: 'gray.100' }}
-                onMouseDown={() => handleResultClick(product.id, product.title)} // Pass product title
+                onMouseDown={() => handleResultClick(product.id, product.title)}
               >
-                {product.title}
+                <Text color="black">{product.title}</Text> {/* Set text color to black */}
               </ListItem>
             ))}
           </List>
@@ -133,6 +135,7 @@ const SearchBar = () => {
         <Box
           position="absolute"
           bg="white"
+          color="black" // Set text color to black
           width="100%"
           mt="1"
           p="2"
@@ -155,7 +158,7 @@ const SearchBar = () => {
           zIndex="10"
         >
           <Box p="2" borderBottom="1px solid" borderColor="gray.200">
-            Recent Searches
+            <Text color="black">Recent Searches</Text>
           </Box>
           <List spacing="1">
             {searchHistory.map((item) => (
@@ -164,9 +167,9 @@ const SearchBar = () => {
                 p="2"
                 cursor="pointer"
                 _hover={{ bg: 'gray.100' }}
-                onMouseDown={() => handleHistoryItemClick(item)} // Handle history item click
+                onMouseDown={() => handleHistoryItemClick(item)}
               >
-                {item}
+                <Text color="black">{item}</Text> {/* Set text color to black */}
               </ListItem>
             ))}
           </List>

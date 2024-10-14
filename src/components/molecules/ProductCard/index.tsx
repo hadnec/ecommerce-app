@@ -43,8 +43,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         src={product.image}
         alt={product.title}
         width="100%"
-        height="200px"
-        objectFit="cover"
+        height="300px"
+        objectFit="contain"
       />
       <Box p="4">
         <Text fontWeight="bold" noOfLines={1}>

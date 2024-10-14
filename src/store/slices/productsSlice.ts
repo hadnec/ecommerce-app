@@ -24,7 +24,9 @@ interface ProductsState {
   selectedProduct: Product | null;
   categories: string[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  categoriesStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+  categoriesError: string | null;
 }
 
 const initialState: ProductsState = {
@@ -32,7 +34,9 @@ const initialState: ProductsState = {
   selectedProduct: null,
   categories: [],
   status: 'idle',
+  categoriesStatus: 'idle',
   error: null,
+  categoriesError: null,
 };
 
 // Async thunk to fetch all products
@@ -143,17 +147,17 @@ const productsSlice = createSlice({
 
       // Handle fetchCategories
       .addCase(fetchCategories.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
+        state.categoriesStatus = 'loading';
+        state.categoriesError = null;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.categoriesStatus = 'succeeded';
         state.categories = action.payload;
-        state.error = null;
+        state.categoriesError = null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message || 'Failed to fetch categories';
+        state.categoriesStatus = 'failed';
+        state.categoriesError = action.error.message || 'Failed to fetch categories';
       });
   },
 });
@@ -161,4 +165,3 @@ const productsSlice = createSlice({
 export const { clearSelectedProduct } = productsSlice.actions;
 
 export default productsSlice.reducer;
-

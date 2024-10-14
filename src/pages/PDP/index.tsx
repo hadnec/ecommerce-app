@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchProductById, clearSelectedProduct } from '../../store/slices/productsSlice';
 import { addItem } from '../../store/slices/wishlistSlice';
+import { addToCart } from '../../store/slices/cartSlice'; 
 import ImageZoom from '../../components/molecules/ImageZoom';
 
 const ProductDetailPage = () => {
@@ -32,6 +33,12 @@ const ProductDetailPage = () => {
   const handleAddToWishlist = () => {
     if (product) {
       dispatch(addItem(product));
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (product) {
+      dispatch(addToCart(product));
     }
   };
 
@@ -73,6 +80,14 @@ const ProductDetailPage = () => {
             colorScheme={isInWishlist ? 'green' : 'teal'}
           >
             {isInWishlist ? 'Added to Wishlist' : 'Add to Wishlist'}
+          </Button>
+          <Button
+            mt="4"
+            ml="4"
+            onClick={handleAddToCart}
+            colorScheme="blue"
+          >
+            Add to Cart
           </Button>
           {/* Additional collapsible sections */}
         </Box>

@@ -1,24 +1,27 @@
 // src/components/organisms/Header.tsx
 
-import React from 'react';
 import {
   Box,
   Flex,
   Link,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Button,
   IconButton,
 } from '@chakra-ui/react';
-import { ChevronDownIcon, StarIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { StarIcon } from '@chakra-ui/icons';
 import { useAppSelector } from '../../../store/hooks';
 import { Link as RouterLink } from 'react-router-dom';
 import SearchBar from '../../molecules/SearchBar';
+import CartFlyout from '../../molecules/CartFlyout';
+import CategoryMenu from '../../molecules/CategoryMenu';
+import { FaShoppingCart } from 'react-icons/fa'; 
+import { useDisclosure, Badge } from '@chakra-ui/react'; 
 
 const Header = () => {
-  const categories = useAppSelector((state) => state.products.categories);
+  const wishlistItems = useAppSelector((state) => state.wishlist.items);
+
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  const { isOpen, onOpen, onClose } = useDisclosure(); 
 
   return (
     <Box bg="gray.800" color="white" px="8" py="4">
@@ -30,32 +33,7 @@ const Header = () => {
               StoreName
             </Link>
           </Box>
-          <Menu>
-            <MenuButton
-              as={Button}
-              leftIcon={<HamburgerIcon />}
-              rightIcon={<ChevronDownIcon />}
-              variant="solid"
-              bg="teal.500"
-              color="white"
-              _hover={{ bg: 'teal.600' }}
-              _active={{ bg: 'teal.700' }}
-              mx="2"
-            >
-              Categories
-            </MenuButton>
-            <MenuList boxShadow="lg" borderColor="teal.500">
-              {categories.map((category) => (
-                <MenuItem
-                  key={category}
-                  as={RouterLink}
-                  to={`/category/${encodeURIComponent(category)}`}
-                >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
+          <CategoryMenu />
         </Flex>
 
         {/* Center: Search Bar */}
@@ -77,21 +55,70 @@ const Header = () => {
           </Link>
 
           {/* Wishlist Icon */}
-          <IconButton
-            aria-label="Wishlist"
-            icon={<StarIcon />}
-            variant="ghost"
-            color="white"
-            _hover={{ bg: 'gray.700' }}
-            _active={{ bg: 'gray.700' }}
-            mx="2"
-            as={RouterLink}
-            to="/wishlist"
-          />
+          <Box position="relative">
+            <IconButton
+              aria-label="Wishlist"
+              icon={<StarIcon />}
+              variant="ghost"
+              color="white"
+              _hover={{ bg: 'gray.700' }}
+              _active={{ bg: 'gray.700' }}
+              mx="2"
+              as={RouterLink}
+              to="/wishlist"
+            />
+            {wishlistItems.length > 0 && (
+              <Badge
+                position="absolute"
+                top="0"
+                right="0"
+                transform="translate(50%, -50%)"
+                bg="red.500"
+                color="white"
+                borderRadius="full"
+                px="2"
+                py="1"
+                fontSize="xs"
+              >
+                {wishlistItems.length}
+              </Badge>
+            )}
+          </Box>
 
-          {/* Other navigation links or icons can be added here */}
+          {/* Cart Icon */}
+          <Box position="relative">
+            <IconButton
+              aria-label="Cart"
+              icon={<FaShoppingCart />}
+              variant="ghost"
+              color="white"
+              _hover={{ bg: 'gray.700' }}
+              _active={{ bg: 'gray.700' }}
+              mx="2"
+              onClick={onOpen} 
+            />
+            {totalQuantity > 0 && (
+              <Badge
+                position="absolute"
+                top="0"
+                right="0"
+                transform="translate(50%, -50%)"
+                bg="red.500"
+                color="white"
+                borderRadius="full"
+                px="2"
+                py="1"
+                fontSize="xs"
+              >
+                {totalQuantity}
+              </Badge>
+            )}
+          </Box>
         </Flex>
       </Flex>
+
+      {/* CartFlyout Component */}
+      <CartFlyout isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };
