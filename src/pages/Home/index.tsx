@@ -42,10 +42,11 @@ const HomePage = () => {
       <Header />
       {/* Full-screen image with text */}
       <Box
-        bgImage="url('https://via.placeholder.com/1920x600')"
+        // bgImage="url('https://via.placeholder.com/1920x600')"
+        bgImage="url('https://images.ctfassets.net/z8ibh2mxnqik/2b8GAYo0bNdAqUa3RBRAPM/23bf4223e3e0d6ac66aae2ea196cf6d9/DESKTOP.jpg?w=1920&h=1080&fm=webp')"
         bgSize="cover"
-        bgPos="center"
-        h="600px"
+        bgPos="contain"
+        h="1080px"
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -56,11 +57,23 @@ const HomePage = () => {
       </Box>
       {/* Slider with products */}
       <Slider products={products} />
-      {/* Two images splitting the screen vertically */}
+      {/* Full-screen image with text */}
+      <Box
+        // bgImage="url('https://via.placeholder.com/1920x600')"
+        bgImage="url('https://images.ctfassets.net/z8ibh2mxnqik/6nJczojyixjSONzJYJqZQS/f0258a7ca5e944edc11ea0c1e97128ec/DESKTOP.jpg?w=1920&h=1080&fm=webp')"
+        bgSize="cover"
+        bgPos="contain"
+        h="1080px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      ></Box>
+      {/* Two images splitting the screen vertically 
       <Box display="flex" h="400px">
         <Box flex="1" bgImage="url('https://via.placeholder.com/960x400')" bgSize="cover" />
         <Box flex="1" bgImage="url('https://via.placeholder.com/960x400')" bgSize="cover" />
       </Box>
+      */}
       {/* Another slider */}
       <Slider products={products} />
       {/* Two product cards without descriptions */}
